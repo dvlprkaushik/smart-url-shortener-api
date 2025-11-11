@@ -7,7 +7,7 @@
     "target": "es2022",
 
     // module resolution
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
