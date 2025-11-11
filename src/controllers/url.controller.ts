@@ -32,7 +32,7 @@ export const shortenUrl = async (
 
     return res.status(201).json({
       success: true,
-      shortUrl: `${baseUrl}/${record.shortCode}`,
+      shortUrl: `${baseUrl}/api/v1/${record.shortCode}`,
       expiresAt: record.expiresAt || null,
     });
   } catch (error) {
