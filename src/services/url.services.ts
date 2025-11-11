@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { prisma } from "../utils/prisma";
+import { prisma } from "../utils/prisma.js";
 
 export const createShortUrl = async (originalUrl: string, expiresAt?: Date) => {
   const shortCode = nanoid(Number(process.env.NANO_LEN));
