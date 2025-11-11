@@ -1,4 +1,4 @@
-import { UrlError } from "@/utils/UrlError";
+import { UrlError } from "@/utils/UrlError.js";
 import { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 
