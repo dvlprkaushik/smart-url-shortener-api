@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
-import pkg from "../package.json";
+import pkg from "../package.json" with {type : 'json'};
 import { listener } from "./listener.js";
-import { UrlError } from "./utils/UrlError";
+import { UrlError } from "./utils/UrlError.js";
 
 dotenv.config({ quiet: true });
 
@@ -33,8 +33,8 @@ app.get("/info", (_req: Request, res: Response) => {
 });
 
 // Main routes
-import { urlRoutes } from "./routes/index.routes";
-import { errorHandler } from "./middleware/errorHandler.middleware";
+import { urlRoutes } from "./routes/index.routes.js";
+import { errorHandler } from "./middleware/errorHandler.middleware.js";
 app.use("/api",urlRoutes);
 
 // Fall back route

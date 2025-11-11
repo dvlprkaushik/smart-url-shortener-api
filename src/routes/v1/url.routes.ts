@@ -1,5 +1,5 @@
-import { validateShorten } from "@/middleware/validation.middleware";
-import * as controller from "../../controllers/url.controller";
+import { validateShorten } from "@/middleware/validation.middleware.js";
+import * as controller from "../../controllers/url.controller.js";
 import { Router } from "express";
 
 const v1UrlRouter = Router();

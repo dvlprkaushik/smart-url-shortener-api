@@ -1,4 +1,4 @@
-import { UrlError } from "@/utils/UrlError";
+import { UrlError } from "@/utils/UrlError.js";
 import { ErrorRequestHandler, Response } from "express";
 
 const responder = (res : Response, statusCode : number, message : string | string[] , err_name : string) =>{
