@@ -79,7 +79,7 @@ export const getStats = async (
   try {
     const record = await service.getStats(req.params.shortCode);
     if (!record) {
-      next(new UrlError(404, "Not found"));
+      return next(new UrlError(404, "Not found"));
     }
 
     return res.status(200).json({
