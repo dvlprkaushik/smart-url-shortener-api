@@ -4,13 +4,13 @@ I built this as a quick, no-frills URL shortener to handle the basics: turning l
 
 ## Tech Stack
 
-[![Node.js](https://img.shields.io/badge/Node.js-green?style=flat&logo=node.js)](https://nodejs.org)
-[![Express.js](https://img.shields.io/badge/Express.js-blue?style=flat&logo=express)](https://expressjs.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-blue?style=flat&logo=typescript)](https://www.typescriptlang.org)
-[![Prisma](https://img.shields.io/badge/Prisma-purple?style=flat&logo=prisma)](https://www.prisma.io)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-green?style=flat&logo=postgresql)](https://www.postgresql.org)
-[![Zod](https://img.shields.io/badge/Zod-blue?style=flat&logo=zod)](https://zod.dev)
-[![NanoID](https://img.shields.io/badge/NanoID-green?style=flat&logo=npm)](https://www.npmjs.com/package/nanoid)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Zod](https://img.shields.io/badge/Zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white)
+![NanoID](https://img.shields.io/badge/NanoID-green?style=for-the-badge&logo=npm&logoColor=white)
 
 ## Project Structure
 
