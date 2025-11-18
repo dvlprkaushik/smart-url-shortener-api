@@ -1,96 +1,189 @@
-# 🚀 Smart URL Shortener API
+# Smart URL Shortener API
 
-[![Node.js](https://img.shields.io/badge/Node.js-v18%2B-brightgreen.svg)](https://nodejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
-[![Express](https://img.shields.io/badge/Express-5.x-orange.svg)](https://expressjs.com/)
-[![Prisma](https://img.shields.io/badge/Prisma-5.x-purple.svg)](https://www.prisma.io/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Deployed on Render](https://img.shields.io/badge/Deployed-Render-blueviolet)](https://render.com/)
+I built this as a quick, no-frills URL shortener to handle the basics: turning long links into short ones, quick redirects, basic click tracking, and optional expiration dates. It's all in Node.js with Express, TypeScript for safety, and Prisma for the database side. Keeps things modular with separate controllers, services, and routes, plus some validation and error catching to make it reliable.
 
-A lightweight and modular URL Shortener API built with Express.js, TypeScript, and Prisma ORM.
-Includes short link creation, redirects, and simple analytics with click tracking and expiry support.
+## Tech Stack
 
-## 🚀 Live Demo
-Check out the deployed version: [https://smart-url-shortener-api.onrender.com](https://smart-url-shortener-api.onrender.com)
+[![Node.js](https://img.shields.io/badge/Node.js-green?style=flat&logo=node.js)](https://nodejs.org)
+[![Express.js](https://img.shields.io/badge/Express.js-blue?style=flat&logo=express)](https://expressjs.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-blue?style=flat&logo=typescript)](https://www.typescriptlang.org)
+[![Prisma](https://img.shields.io/badge/Prisma-purple?style=flat&logo=prisma)](https://www.prisma.io)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-green?style=flat&logo=postgresql)](https://www.postgresql.org)
+[![Zod](https://img.shields.io/badge/Zod-blue?style=flat&logo=zod)](https://zod.dev)
+[![NanoID](https://img.shields.io/badge/NanoID-green?style=flat&logo=npm)](https://www.npmjs.com/package/nanoid)
 
-## 🧩 Features
-
-* ✨ Shorten long URLs using unique short codes (NanoID)
-* 🔗 Redirect to original URLs instantly
-* 📊 Track access count and last access time
-* ⏰ Optional expiry for short links
-* ⚙️ Modular architecture (Controllers → Services → Routes)
-* 🧱 Centralized validation and error handling (Zod + custom UrlError)
-* 📦 Prisma ORM with migrations
-
-## 🧱 Tech Stack
-
-| Category     | Technologies                          |
-|--------------|---------------------------------------|
-| **Runtime**  | Node.js v18+                          |
-| **Framework**| Express.js v5                         |
-| **Language** | TypeScript                            |
-| **ORM**      | Prisma                                |
-| **Database** | PostgreSQL                            |
-| **Validation**| Zod                                  |
-| **Utilities**| NanoID, Dotenv                        |
-
-## 🗂️ Folder Structure
+## Project Structure
 
 ```
-smart_url_shortener_api/
-├── prisma/
-│   ├── migrations/
-│   └── schema.prisma
-├── src/
-│   ├── controllers/        # Route logic (shorten, redirect, stats)
-│   ├── middleware/         # Validation & error handling
-│   ├── routes/             # v1 and index routes
-│   ├── services/           # DB queries via Prisma
-│   ├── utils/              # Prisma client, UrlError, helpers
-│   └── index.ts            # App entry point
-├── .env
-├── package.json
-├── tsconfig.json
-└── README.md
+src/
+├── controllers/      # Route handlers for shorten, redirect, stats
+├── middleware/       # Validation and error middleware
+├── routes/           # API routes under v1
+├── services/         # Core logic and Prisma queries
+├── utils/            # Helpers like Prisma client and UrlError
+└── index.ts          # Server startup
+
+prisma/
+├── schema.prisma     # Single Url model
+└── migrations/       # DB changes
+
+.env
+package.json
+tsconfig.json
+README.md
 ```
 
-## ⚙️ Environment Variables
+## Database Overview
 
-Create a `.env` file in the root directory:
+Just one Prisma model: **Url** – holds the original link, short code, click count, creation/last access times, and expiry if set.
 
-```env
-DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/urlshortener"
-PORT=3000
-BASE_URL="http://localhost:3000"
-NODE_ENV="development"
-NANO_LEN = NanoID length, e.g., 7
-BASE_URL = Base URL for shortened links, e.g., http://myshortener.com
+Check the full schema in `/prisma/schema.prisma`.
+
+## Try Now - Live Deployment
+
+Hit it up live here: [Visit](https://smart-url-shortener-api.onrender.com)
+
+### Health Check
+[Visit](https://smart-url-shortener-api.onrender.com/) `GET /`
+
+Quick server status ping.
+
+**Live Example**: `curl https://smart-url-shortener-api.onrender.com/`
+
+**Response**:
+```json
+{"status":"OK","message":"Server is running 🚀"}
 ```
 
-## 🚦 API Endpoints
+### Info
+[Visit](https://smart-url-shortener-api.onrender.com/info) `GET /info`
 
-### 1️⃣ Create Short URL
-**POST** `/api/v1/shorten`
+Package details straight from the source.
 
-**Request Body**
+**Live Example**: `curl https://smart-url-shortener-api.onrender.com/info`
+
+**Response**:
 ```json
 {
-  "url": "https://example.com",
-  "expiresAt": "2025-12-01T00:00:00Z"
+  "name": "smart_url_shortener_api",
+  "version": "1.0.0",
+  "description": "A lightweight and modular URL shortener API built with Express, TypeScript, and Prisma. Includes short link creation, redirects, and simple analytics with click tracking and expiry support.",
+  "author": "kaushik",
+  "repository": "https://github.com/dvlprkaushik/smart-url-shortener-api.git",
+  "license": "ISC"
 }
 ```
 
-**Response (201)**
+## Shorten Routes
+
+- **Create Short URL**: `POST /api/v1/shorten`
+  Takes a URL and optional expiry, spits out a short code.
+  *Body*: `{"url": "https://example.com", "expiresAt": "2025-12-01T00:00:00Z"}`
+  *Example*: `curl -X POST http://localhost:3000/api/v1/shorten -H "Content-Type: application/json" -d '{"url":"https://example.com","expiresAt":"2025-12-01T00:00:00Z"}'`
+  *Response* (201):
+  ```json
+  {
+    "success": true,
+    "shortUrl": "http://localhost:3000/AbC123",
+    "expiresAt": "2025-12-01T00:00:00.000Z"
+  }
+  ```
+
+## Redirect Routes
+
+- **Redirect to Original**: `GET /:shortCode`
+  Follows the short link to the real one, bumps the click count.
+  *Example*: `curl -L http://localhost:3000/AbC123`
+  *Success*: 302 to `https://example.com`
+  *Error* (410 - Expired):
+  ```json
+  {
+    "success": false,
+    "statusCode": 410,
+    "error": "Link expired",
+    "error_name": "UrlError",
+    "timestamp": "2025-11-11T12:00:00.000Z"
+  }
+  ```
+
+## Stats Routes
+
+- **URL Stats**: `GET /api/v1/stats/:shortCode`
+  Pulls click count, timestamps, and expiry for a short code.
+  *Example*: `curl http://localhost:3000/api/v1/stats/AbC123`
+  *Response* (200):
+  ```json
+  {
+    "success": true,
+    "data": {
+      "stats": {
+        "originalUrl": "https://example.com",
+        "shortCode": "AbC123",
+        "accessCount": 48,
+        "createdAt": "2025-11-10T09:12:00.000Z",
+        "lastAccess": "2025-11-11T15:32:00.000Z",
+        "expiresAt": "2025-12-01T00:00:00.000Z"
+      }
+    }
+  }
+  ```
+
+- **All URLs**: `GET /api/v1/all`
+  Lists every short link created.
+  *Example*: `curl http://localhost:3000/api/v1/all`
+  *Response* (200):
+  ```json
+  {
+    "success": true,
+    "data": {
+      "urls": [
+        {
+          "originalUrl": "https://openai.com",
+          "shortCode": "XyZ987"
+        },
+        {
+          "originalUrl": "https://github.com",
+          "shortCode": "AbC123"
+        }
+      ]
+    }
+  }
+  ```
+
+- **Top Visited**: `GET /api/v1/top`
+  Shows the most-clicked shorts, sorted by hits.
+  *Example*: `curl http://localhost:3000/api/v1/top`
+  *Response* (200):
+  ```json
+  {
+    "success": true,
+    "data": {
+      "topUrls": [
+        {
+          "shortCode": "AbC123",
+          "accessCount": 48
+        },
+        {
+          "shortCode": "XyZ987",
+          "accessCount": 33
+        }
+      ]
+    }
+  }
+  ```
+
+## Response Format
+
+**Success**:
 ```json
 {
   "success": true,
-  "shortUrl": "http://localhost:3000/AbC123",
-  "expiresAt": "2025-12-01T00:00:00.000Z"
+  "data": {},
+  "timestamp": "2025-11-11T12:00:00.000Z"
 }
 ```
 
-**Error (400)**
+**Error**:
 ```json
 {
   "success": false,
@@ -101,79 +194,9 @@ BASE_URL = Base URL for shortened links, e.g., http://myshortener.com
 }
 ```
 
-### 2️⃣ Redirect to Original URL
-**GET** `/:shortCode`
+Catches UrlError, bad inputs, and 404s the same way.
 
-Example: `GET /AbC123`
-
-**Response:**
-`→ 302 Redirects to https://example.com`
-
-**Error (410 – expired)**
-```json
-{
-  "success": false,
-  "statusCode": 410,
-  "error": "Link expired",
-  "error_name": "UrlError"
-}
-```
-
-### 3️⃣ Get URL Stats
-**GET** `/api/v1/stats/:shortCode`
-
-**Response (200)**
-```json
-{
-  "success": true,
-  "data": {
-    "stats": {
-      "originalUrl": "https://example.com",
-      "shortCode": "AbC123",
-      "accessCount": 48,
-      "createdAt": "2025-11-10T09:12:00.000Z",
-      "lastAccess": "2025-11-11T15:32:00.000Z",
-      "expiresAt": "2025-12-01T00:00:00.000Z"
-    }
-  }
-}
-```
-
-### 4️⃣ Get All URLs
-**GET** `/api/v1/all`
-
-**Response**
-```json
-{
-  "success": true,
-  "data": {
-    "urls": [
-      { "originalUrl": "https://openai.com", "shortCode": "XyZ987" },
-      { "originalUrl": "https://github.com", "shortCode": "AbC123" }
-    ]
-  }
-}
-```
-
-### 5️⃣ Get Top Visited URLs
-**GET** `/api/v1/top`
-
-**Response**
-```json
-{
-  "success": true,
-  "data": {
-    "topUrls": [
-      { "shortCode": "AbC123", "accessCount": 48 },
-      { "shortCode": "XyZ987", "accessCount": 33 }
-    ]
-  }
-}
-```
-
-## ⚠️ Global Error Format
-Every error in the app follows a consistent shape:
-
+**404 Not Found**:
 ```json
 {
   "success": false,
@@ -184,58 +207,69 @@ Every error in the app follows a consistent shape:
 }
 ```
 
-## 🧠 Run Locally
+## Environment Variables
 
-```bash
-# 1️⃣ Install dependencies
-npm install
-
-# 2️⃣ Setup Prisma and DB
-npx prisma migrate dev --name init
-
-# 3️⃣ Start development server
-npm run dev
+```
+DATABASE_URL=
+PORT=
+BASE_URL=
+NODE_ENV=
+NANO_LEN=
 ```
 
-## 📦 Build & Run
+## Installation & Setup
 
-```bash
-# Build
-npm run build
+1. Clone it down:
+   ```bash
+   git clone https://github.com/dvlprkaushik/smart-url-shortener-api
+   cd smart-url-shortener-api
+   npm install
+   ```
 
-# Start (production)
-npm start
-```
+2. Set up the DB:
+   ```bash
+   npx prisma generate
+   npx prisma migrate deploy
+   ```
 
-## 🧩 Example cURL Usage
+3. Drop your `.env` vars in.
 
-```bash
-curl -X POST http://localhost:3000/api/v1/shorten \
- -H "Content-Type: application/json" \
- -d '{"url": "https://openai.com"}'
-```
+4. Run dev mode:
+   ```bash
+   npm run dev
+   ```
 
-**Response**
-```json
-{
-  "success": true,
-  "shortUrl": "http://localhost:3000/a1bC9d"
-}
-```
+5. For prod:
+   ```bash
+   npm run build
+   npm start
+   ```
 
-## 🧱 Project Highlights
+## Deployment
 
-* Modular, versioned architecture (routes/v1)
-* Clean controller–service–middleware separation
-* Centralized error handling (UrlError)
-* Consistent API responses across success and errors
-* Prisma-powered database layer with @unique shortCode indexing
-* Expandable structure (ready for caching, auth, or analytics table)
+### PostgreSQL (Neon)
+Free tier works fine—grab a connection string for `DATABASE_URL`.
 
+### Backend (Render/Railway)
+- Build: `npm install && npm run build`
+- Start: `npm start`
+- Plug in your env vars on the dashboard.
 
-## 🧑‍💻 Author
+## Architecture Highlights
+
+- API under `/api/v1` so it's easy to version later.
+- Controllers call services for the heavy lifting, routes tie it together.
+- UrlError handles all the oops moments consistently.
+- Zod keeps inputs sane.
+- Prisma with indexes on short codes for speed.
+- NanoID for those clean, short codes without collisions.
+- Tracks clicks and times out of the box.
+
+## Technical Decisions
+
+Went with NanoID because it's shorter and friendlier than full UUIDs. Unique indexes on codes mean lookups fly. Expiry's optional so links can stick around or vanish as needed. Middleware catches validation early, and TypeScript keeps the whole thing from falling apart.
+
+## Author
+
 **Kaushik**
-Backend Developer • Node.js & TypeScript Enthusiast
-[GitHub](https://github.com/dvlprkaushik) <!-- Replace with your actual GitHub link -->
-
----
+Backend dev into Node.js, TypeScript, and clean APIs.
